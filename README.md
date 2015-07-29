@@ -15,14 +15,17 @@
   
   * Berkshelf is a tool for managing cookbook dependencies. 
   * The omnibus plugin is useful to ensure you're using the latest revision of chef. 
+
 + ### The Vagrant Berkshelf plugin requires Berkshelf from the [Chef Development Kit](https://downloads.getchef.com/chef-dk)
 
 ##Steps:
+
 + ### Install the nginx webserver via chef-solo
   ```
   berks cookbook chef-repo
   cd chef-repo
   ```
+  
 + ### Edit the Vagrantfile to install `nginx`:
   ```
   Vagrant.configure("2") do |config|
@@ -43,6 +46,7 @@
 
   end
   ```
+  
 + ### Edit the Berksfile to:
   ```
   source "https://supermarket.chef.io"
