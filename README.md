@@ -20,3 +20,7 @@
   curl -L https://www.opscode.com/chef/install.sh | bash
   ```
   print the version number with `chef-solo -v` 
+### Install the nginx webserver via chef-solo
+  ```
+  git clone https://github.com/opscode-cookbooks/nginx.git cookbooks/nginx
+  ```
