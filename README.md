@@ -1,26 +1,12 @@
 # VagrantTest
 ##Steps:
-### Create a Vagrantfile using the box puphpet/ubuntu1404-x64:
-  ```
-  vagrant init
-  vagrant box add puphpet/ubuntu1404-x64
-  ```
-  
-  configure the Vagrantfile
-  ```
-  config.vm.box = "puphpet/ubuntu1404-x64";
-  ```
-  
-  boot the virtual machine running ubuntu 14.04
-  ```
-  vagrant up
-  ```
+### Install the lastest [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
 ### Install the lastest version of chef-solo:
   ```
   curl -L https://www.opscode.com/chef/install.sh | bash
   ```
   print the version number with `chef-solo -v` 
-### To more effectively use chef I'd advise installing the following vagrant plugins:
+###Installing the following vagrant plugins:
   ```
   vagrant plugin install vagrant-omnibus
   vagrant plugin install vagrant-berkshelf
@@ -30,7 +16,8 @@
   The Vagrant Berkshelf plugin requires Berkshelf from the [Chef Development Kit](https://downloads.getchef.com/chef-dk)
 ### Install the nginx webserver via chef-solo
   ```
-  git clone https://github.com/opscode-cookbooks/nginx.git cookbooks/nginx
+  berks cookbook chef-repo
+  cd chef-repo
   ```
   Edit the Vagrantfile to install `nginx`:
   ```
@@ -49,5 +36,10 @@
     chef.add_recipe "nginx"
   end
 
-end
-```
+  end
+  ```
+  Edit the Berksfile to:
+  ```
+  site :opscode
+  cookbook 'nginx'
+  ```
