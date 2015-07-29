@@ -26,7 +26,8 @@
   vagrant plugin install vagrant-berkshelf
   ```
   
-  Berkshelf is a tool for managing cookbook dependencies. The omnibus plugin is useful to ensure you're using the latest revision of chef.
+  Berkshelf is a tool for managing cookbook dependencies. The omnibus plugin is useful to ensure you're using the latest revision of chef. 
+  The Vagrant Berkshelf plugin requires Berkshelf from the [Chef Development Kit](https://downloads.getchef.com/chef-dk)
 ### Install the nginx webserver via chef-solo
   ```
   git clone https://github.com/opscode-cookbooks/nginx.git cookbooks/nginx
