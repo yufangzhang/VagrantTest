@@ -1,12 +1,12 @@
 # VagrantTest
 ##Pre-Requisites:
-###+[Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
-###+Chef-solo:
+###+ [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
+###+ Chef-solo:
   ```
   curl -L https://www.opscode.com/chef/install.sh | bash
   ```
   print the version number with `chef-solo -v` 
-###+Vagrant plugins:
+###+ Vagrant plugins:
   ```
   vagrant plugin install vagrant-omnibus
   vagrant plugin install vagrant-berkshelf
