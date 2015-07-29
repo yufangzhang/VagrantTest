@@ -1,6 +1,6 @@
 # VagrantTest
 ##Pre-Requisites:
-###+ [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
++ ###[Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
 ###+ Chef-solo:
   ```
   curl -L https://www.opscode.com/chef/install.sh | bash
