@@ -15,3 +15,8 @@
   ```
   vagrant up
   ```
+### Install the lastest version of chef-solo:
+  ```bash
+  curl -L https://www.opscode.com/chef/install.sh | bash
+  ```
+  print the version number with `chef-solo -v` 
