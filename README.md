@@ -1,27 +1,27 @@
 # VagrantTest
 ##Pre-Requisites:
 + ###[Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
-###+ Chef-solo:
++ ###Chef-solo:
   ```
   curl -L https://www.opscode.com/chef/install.sh | bash
   ```
   print the version number with `chef-solo -v` 
-###+ Vagrant plugins:
++ ###Vagrant plugins:
   ```
   vagrant plugin install vagrant-omnibus
   vagrant plugin install vagrant-berkshelf
   ```
   
-  *Berkshelf is a tool for managing cookbook dependencies. 
-  *The omnibus plugin is useful to ensure you're using the latest revision of chef. 
-###+The Vagrant Berkshelf plugin requires Berkshelf from the [Chef Development Kit](https://downloads.getchef.com/chef-dk)
+  * Berkshelf is a tool for managing cookbook dependencies. 
+  * The omnibus plugin is useful to ensure you're using the latest revision of chef. 
++ ###The Vagrant Berkshelf plugin requires Berkshelf from the [Chef Development Kit](https://downloads.getchef.com/chef-dk)
 ##Steps:
-###+Install the nginx webserver via chef-solo
++ ###Install the nginx webserver via chef-solo
   ```
   berks cookbook chef-repo
   cd chef-repo
   ```
-###+Edit the Vagrantfile to install `nginx`:
++ ###Edit the Vagrantfile to install `nginx`:
   ```
   Vagrant.configure("2") do |config|
 
@@ -41,7 +41,7 @@
 
   end
   ```
-###+Edit the Berksfile to:
++ ###Edit the Berksfile to:
   ```
   source "https://supermarket.chef.io"
   metadata
