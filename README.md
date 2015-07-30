@@ -53,3 +53,45 @@
   metadata
   cookbook "nginx", "~> 2.6"
   ```
+  
++ ### Check if nginx is listening on port80 using Vagrant's shell provisioner:
+  * Add port forwarding to Vagrantfile:
+  ```
+  config.vm.network :forwarded_port, guest: 80, host: 8080
+  ```
+  
+  * Configure Vagrant to run this shell script when setting up our machine
+  ```
+  config.vm.provision :shell, path: "setup.sh"
+  ```
+  * check it out with browser
+  ```
+  http://127.0.0.1:8080
+  ```
+  It will show a 404 Not Found error because we haven’t added any content to our web site yet, the important part is that Nginx Server sent the response: `nginx/1.4.6 (Ubuntu)`
+
++ ### Vagrant user and admin group:
+  
+  * Add vagrant user foo to admin group
+    Edit `recipes/default.rb` to create user `foo` and group `admin`on the test machine.
+    ```
+    group 'admin'
+    user 'foo' do
+      group 'admin'
+      system true
+      shell '/bin/bash'
+    end
+    ```
+    Save the file and re-run `vagrant provision`
+    Note that because we are using well-defined resources that are completely idempotent, if we run vagrant provision again, the Chef run executes more quickly and it does not try to re-create the user/group it already created.
+    
+    * Add multiple lines to /etc/sudoer file:
+    ```
+    # Vagrant user can sudo without a password
+    vagrant ALL=(ALL) NOPASSWD:ALL
+    # users in admin group can sudo with a password
+    %admin  ALL=(ALL) ALL
+    ```
+  
+  * 
++ 
