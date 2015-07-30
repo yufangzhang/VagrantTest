@@ -71,22 +71,27 @@
   It will show a 404 Not Found error because we haven’t added any content to our web site yet, the important part is that Nginx Server sent the response: `nginx/1.4.6 (Ubuntu)`
 
 + ### Vagrant user and admin group:
-  * Add one line to /etc/sudoer file:
+  
+  * Add vagrant user foo to admin group
+    Edit `recipes/default.rb` to create user `foo` and group `admin`on the test machine.
     ```
-    # add vagrant user
-    vagrant ALL=(ALL) NOPASSWD:ALL
+    group 'admin'
+    user 'foo' do
+      group 'admin'
+      system true
+      shell '/bin/bash'
+    end
     ```
+    Save the file and re-run `vagrant provision`
+    Note that because we are using well-defined resources that are completely idempotent, if we run vagrant provision again, the Chef run executes more quickly and it does not try to re-create the user/group it already created.
     
-    so that Vagrant user can sudo without a password
-  * Add two vagrant users foo and bar to admin group:
-  ```
-  vagrant ssh 
-  sudo groupadd admin
-  sudo usermod -a -G admin vagrant
-  sudo useradd foo -d /home/foo -m
-  sudo useradd bar -d /home/bar -m
-  sudo adduser foo admin
-  sudo adduser bar admin
-  ```
+    * Add multiple lines to /etc/sudoer file:
+    ```
+    # Vagrant user can sudo without a password
+    vagrant ALL=(ALL) NOPASSWD:ALL
+    # users in admin group can sudo with a password
+    %admin  ALL=(ALL) ALL
+    ```
+  
   * 
 + 
