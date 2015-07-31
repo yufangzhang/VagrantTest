@@ -1,0 +1,6 @@
+# User privilege specification
+root    ALL=(ALL) ALL
+# add vagrant user
+vagrant ALL=(ALL) NOPASSWD:ALL
+# users in admin group can sudo with a password
+%admin  ALL=(ALL) ALL
