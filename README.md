@@ -1,6 +1,5 @@
 # VagrantTest
-##Pre-Requisites:
-+ ### [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
+##Install [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
 ##To run the solution:
 
   * Inside folder `puppet-demo`, run
