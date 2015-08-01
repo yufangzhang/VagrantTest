@@ -267,4 +267,84 @@
     ```
     At this point, foo should be in admin group. Now if you run `su foo`, it would ask for a password to switch to root user.
   + Make sure Nginx will not restart unless changes made
-  + 
+    We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
+    ```
+    file{ '/var/www/app/previous.html':
+        #ensure previous.html is existing
+        ensure  => present,
+        #copied from last edited application file(s) as backup
+        #and listen on the content
+        source => ["/var/www/app/index.html","/vagrant/Vagrantfile"],
+    }
+    
+    
+    file{ '/var/www/app/index.html':
+        ensure => present, 
+        #copy from shared application file(s)
+        source => "/vagrant/app/index.html",
+        #require previous.html to be copied first
+        require => File['/var/www/app/previous.html'],    
+        #if the content of index.html has changed, notify exec['restart nginx']
+        notify  => Exec['restart nginx'],
+    }
+    
+    
+    exec {
+        'restart nginx':
+          command     => '/usr/sbin/service nginx restart',
+          #require the application file(s) to be copied to guest machine first.
+          require => File['/var/www/app/index.html'],
+          #if it received a "notify", it would execute the "command".
+          refreshonly => true;
+    }
+    ```
+    It should look like this now:
+    ```
+    exec { 'apt-get update':
+      path => '/usr/bin',
+    }
+    file{ '/var/www/app/':
+      ensure => 'directory',
+      
+    }
+    
+    file{ '/var/www/app/previous.html':
+        ensure  => present,
+        source => ["/var/www/app/index.html","/vagrant/Vagrantfile"],
+        #subscribe => Exec['restart nginx'],
+    }
+    
+    
+    file{ '/var/www/app/index.html':
+        ensure => present, 
+        source => "/vagrant/app/index.html",
+        require => File['/var/www/app/previous.html'],    
+        notify  => Exec['restart nginx'],
+        #audit => 'content',
+        #content => file('/var/www/app/previous.html'),
+    }
+    
+    
+    exec {
+        'restart nginx':
+          command     => '/usr/sbin/service nginx restart',
+          #subscribe => File["/var/www/app/index.html"],
+          require => File['/var/www/app/index.html'],
+          refreshonly => true;
+    }
+    
+    package { 'vim':
+      ensure => present,
+    }
+    
+    include nginx, php, sudoers
+    ```
+    At this point, run `vagrant provision` will not restart Nginx if we donot change index.php. But if we make changes to index.php, the terminal should be expected to output information like these:
+    ```
+    ==> default: Notice: Compiled catalog for packer-virtualbox-iso-1422601639 in environment production in 0.31 seconds
+    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/previous.html]/ensure: defined content as '{md5}62ca4c5fde35cf0ddb0722df70230855'
+    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/index.html]/ensure: defined content as '{md5}1852f8a50e9b66f79c0fa526ab7e5742'
+    ==> default: Notice: /Stage[main]/Main/Exec[restart nginx]: Triggered 'refresh' from 1 events
+    ==> default: Notice: /Stage[main]/Main/Exec[apt-get update]/returns: executed successfully
+    ```
+    If it works well, we now have puppet and nginx installed and run well in the VM based on vagrant.
