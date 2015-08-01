@@ -1,12 +1,12 @@
 # VagrantTest
 
 ##Directory structure:
-  
-  >.
-  >|-- app
-  >|   `-- index.php
-  >|-- puppet
-  >|   |-- manifests
+  ```
+  .
+  |-- app
+  |   `-- index.php
+  |-- puppet
+  |   |-- manifests
   |   |   `-- init.pp
   |   `-- modules
   |       |-- nginx
@@ -24,7 +24,7 @@
   |               `-- init.pp
   |-- test_port.sh
   `-- Vagrantfile
-  >
+  ```
   
 ##Steps:
   + Install [Vagrant] (https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.dmg)
