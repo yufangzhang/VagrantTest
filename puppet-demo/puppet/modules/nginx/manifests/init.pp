@@ -1,21 +1,22 @@
 class nginx {
 
   # Symlink guest /var/www/app to host /vagrant
-  file { '/var/www/app':
-    ensure  => 'link',
-    target  => '/vagrant/app',
-  }
-
+  
+  
+  
+  
   package { 'nginx':
     ensure => 'present',
-    require => Exec['apt-get update'],
+    require => Exec['apt-get update'];
   }
 
   service { 'nginx':
     ensure => running,
     require => Package['nginx'],
+
   }
 
+  
   # Add vhost template
   file { 'vagrant-nginx':
       path => '/etc/nginx/sites-available/127.0.0.1',
