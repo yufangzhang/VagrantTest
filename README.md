@@ -269,22 +269,22 @@
   + Make sure Nginx will not restart unless changes made
     We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
     ```
-    file{ '/var/www/app/previous.html':
+    file{ '/var/www/app/previous.php':
         #ensure previous.html is existing
         ensure  => present,
         #copied from last edited application file(s) as backup
         #and listen on the content
-        source => ["/var/www/app/index.html","/vagrant/Vagrantfile"],
+        source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
     }
     
     
-    file{ '/var/www/app/index.html':
+    file{ '/var/www/app/index.php':
         ensure => present, 
         #copy from shared application file(s)
-        source => "/vagrant/app/index.html",
-        #require previous.html to be copied first
-        require => File['/var/www/app/previous.html'],    
-        #if the content of index.html has changed, notify exec['restart nginx']
+        source => "/vagrant/app/index.php",
+        #require previous.php to be copied first
+        require => File['/var/www/app/previous.php'],    
+        #if the content of index.php has changed, notify exec['restart nginx']
         notify  => Exec['restart nginx'],
     }
     
@@ -293,7 +293,7 @@
         'restart nginx':
           command     => '/usr/sbin/service nginx restart',
           #require the application file(s) to be copied to guest machine first.
-          require => File['/var/www/app/index.html'],
+          require => File['/var/www/app/index.php'],
           #if it received a "notify", it would execute the "command".
           refreshonly => true;
     }
@@ -308,28 +308,28 @@
       
     }
     
-    file{ '/var/www/app/previous.html':
+    file{ '/var/www/app/previous.php':
         ensure  => present,
-        source => ["/var/www/app/index.html","/vagrant/Vagrantfile"],
+        source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
         #subscribe => Exec['restart nginx'],
     }
     
     
-    file{ '/var/www/app/index.html':
+    file{ '/var/www/app/index.php':
         ensure => present, 
-        source => "/vagrant/app/index.html",
-        require => File['/var/www/app/previous.html'],    
+        source => "/vagrant/app/index.php",
+        require => File['/var/www/app/previous.php'],    
         notify  => Exec['restart nginx'],
         #audit => 'content',
-        #content => file('/var/www/app/previous.html'),
+        #content => file('/var/www/app/previous.php'),
     }
     
     
     exec {
         'restart nginx':
           command     => '/usr/sbin/service nginx restart',
-          #subscribe => File["/var/www/app/index.html"],
-          require => File['/var/www/app/index.html'],
+          #subscribe => File["/var/www/app/index.php"],
+          require => File['/var/www/app/index.php'],
           refreshonly => true;
     }
     
@@ -342,8 +342,8 @@
     At this point, run `vagrant provision` will not restart Nginx if we donot change index.php. But if we make changes to index.php, the terminal should be expected to output information like these:
     ```
     ==> default: Notice: Compiled catalog for packer-virtualbox-iso-1422601639 in environment production in 0.31 seconds
-    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/previous.html]/ensure: defined content as '{md5}62ca4c5fde35cf0ddb0722df70230855'
-    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/index.html]/ensure: defined content as '{md5}1852f8a50e9b66f79c0fa526ab7e5742'
+    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/previous.php]/ensure: defined content as '{md5}62ca4c5fde35cf0ddb0722df70230855'
+    ==> default: Notice: /Stage[main]/Main/File[/var/www/app/index.php]/ensure: defined content as '{md5}1852f8a50e9b66f79c0fa526ab7e5742'
     ==> default: Notice: /Stage[main]/Main/Exec[restart nginx]: Triggered 'refresh' from 1 events
     ==> default: Notice: /Stage[main]/Main/Exec[apt-get update]/returns: executed successfully
     ```
