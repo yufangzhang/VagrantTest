@@ -221,7 +221,7 @@
     Keep the application code within `/puppet-demo/app/`, and because we forwarded incoming Vagrant requests on port 5555 to port 80 on the guest machine, it means we can hit the app folder through a standard web server request. Therefore, we can create a simple PHP script inside `/puppet-demo/app/` called index.php:
 
     ```
-    #/puppet-demo/app/index.php
+    #puppet-demo/app/index.php
     <?php
     print("Hello World");
     ?>
@@ -249,12 +249,12 @@
   + Manage the contents of `/etc/sudoers` file
     * Add one more dependency on puppet/manifests by doing:
     ```
-    cd puppet/modules
-    mkdir -p sudoers/{files,manifests}
+    $ cd puppet/modules
+    $ mkdir -p sudoers/{files,manifests}
     ```
     * Edit `puppet/manifests/init.pp` to include `sudoers` as well. Now it should look like:
     ```
-    /puppet-demo/manifests/init.pp
+    #puppet-demo/manifests/init.pp
     #Run apt-get update;
      exec { 'apt-get update':
        path => '/usr/bin',
@@ -270,6 +270,7 @@
      
     include nginx, php, sudoers
     ```
+    
     * Create the file `puppet/modules/sudoers/manifests/init.pp` with the following contents:
     ```
     #puppet/modules/sudoers/manifests/init.pp
@@ -284,7 +285,9 @@
       }
     }
     ```
+    
     This suggests that `/etc/sudoers` on the guest machine would be copied from puppet/modules/sudoers/files/sudoers from the host machine.
+    
     * Create `puppet/modules/sudoers/files/sudoers`
     ```
     #puppet/modules/sudoers/files/sudoers
@@ -314,10 +317,11 @@
     $ sudo adduser foo admin
     ```
     
-    At this point, foo should be in admin group. Now if you run `su foo`, it would ask for a password to switch to root user.
+    At this point, foo should be in admin group. To switch to foo user, run `sudo su foo`. Then run `sudo -s` to get root privilege. It should ask for a password.
+    
   + Make sure Nginx will not restart unless changes made
   
-    We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
+    The idea is to compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
     ```
     # ensure /var/www/app exists
     file{ '/var/www/app/':
