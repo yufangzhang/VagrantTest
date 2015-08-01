@@ -1,12 +1,12 @@
 # VagrantTest
 
 ##Directory structure:
-  >
-  .
-  |-- app
-  |   `-- index.php
-  |-- puppet
-  |   |-- manifests
+  
+  >.
+  >|-- app
+  >|   `-- index.php
+  >|-- puppet
+  >|   |-- manifests
   |   |   `-- init.pp
   |   `-- modules
   |       |-- nginx
