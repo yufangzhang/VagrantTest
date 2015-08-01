@@ -261,7 +261,7 @@
     * Test sudoers file
     Run `vagrant provision` and `vagrant ssh` to ssh into the virtual machine. 
     Firstly, try if vagrant can sudo without a password by runing `$ sudo -s`. It should be switched to root user without a password.
-    Then, add a user `foo` in the `admin` group by running the following code:
+    Run `exit` and add a user `foo` in the `admin` group by running the following code:
     ```
     sudo useradd foo
     sudo passwd foo
