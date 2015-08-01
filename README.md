@@ -130,39 +130,39 @@
       class nginx {
        # Install the nginx package. This relies on apt-get update
        package { 'nginx':
-         ensure => 'present',
-         require => Exec['apt-get update'];
+         ensure   => 'present',
+         require  => Exec['apt-get update'];
        }
        # Make sure that the nginx service is running
        service { 'nginx':
-         ensure => running,
-         require => Package['nginx'],
+         ensure   => running,
+         require  => Package['nginx'],
      
        }
      
        
        # Add vhost template
        file { 'vagrant-nginx':
-           path => '/etc/nginx/sites-available/127.0.0.1',
-           ensure => file,
-           require => Package['nginx'],
-           source => 'puppet:///modules/nginx/127.0.0.1',
+           path     => '/etc/nginx/sites-available/127.0.0.1',
+           ensure   => file,
+           require  => Package['nginx'],
+           source   => 'puppet:///modules/nginx/127.0.0.1',
        }
      
        # Disable default nginx vhost
        file { 'default-nginx-disable':
-           path => '/etc/nginx/sites-enabled/default',
-           ensure => absent,
-           require => Package['nginx'],
+           path     => '/etc/nginx/sites-enabled/default',
+           ensure   => absent,
+           require  => Package['nginx'],
        }
      
        # Symlink our vhost in sites-enabled
        file { 'vagrant-nginx-enable':
-           path => '/etc/nginx/sites-enabled/127.0.0.1',
-           target => '/etc/nginx/sites-available/127.0.0.1',
-           ensure => link,
-           notify => Service['nginx'],
-           require => [
+           path     => '/etc/nginx/sites-enabled/127.0.0.1',
+           target   => '/etc/nginx/sites-available/127.0.0.1',
+           ensure   => link,
+           notify   => Service['nginx'],
+           require  => [
                File['vagrant-nginx'],
                File['default-nginx-disable'],
            ],
@@ -204,13 +204,13 @@
       # Install the php5-fpm and php5-cli packages
       package { ['php5-fpm',
                  'php5-cli']:
-        ensure => present,
+        ensure  => present,
         require => Exec['apt-get update'],
       }
     
       # Make sure php5-fpm is running
       service { 'php5-fpm':
-        ensure => running,
+        ensure  => running,
         require => Package['php5-fpm'],
       }
     }
@@ -257,7 +257,7 @@
     #puppet-demo/manifests/init.pp
     #Run apt-get update;
      exec { 'apt-get update':
-       path => '/usr/bin',
+       path   => '/usr/bin',
      }
      #Ensure the Vim package is installed and present; It is optional.
      package { 'vim':
@@ -278,10 +278,10 @@
     # Manage the sudoers file
     class sudoers {
       file { '/etc/sudoers':
-        source => '/vagrant/puppet/modules/sudoers/files/sudoers',
-        mode => '0440', 
-        owner => 'root',
-        group => 'root',
+        source  => '/vagrant/puppet/modules/sudoers/files/sudoers',
+        mode    => '0440', 
+        owner   => 'root',
+        group   => 'root',
       }
     }
     ```
@@ -323,38 +323,40 @@
   
     The idea is to compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. `puppet-demo/puppet/manifests/init.pp` should look like:
     ```
-       #Run apt-get update;
-      exec { 'apt-get update':
-       path => '/usr/bin',
-      }
-      #Ensure the Vim package is installed and present; It is optional.
-      package { 'vim':
-       ensure => present,
-      }
-      
-      
-      file{ '/var/www/app/': 
-          ensure => 'directory',
-          source => "/vagrant/app/",
-          recurse => true,
-          #if the content of index.php has changed, notify exec['restart nginx']
-          notify  => Exec['restart nginx'],
-      }
-      
-      
-      exec {
-          'restart nginx':
-            command     => '/usr/sbin/service nginx restart',
-            #require the application file(s) to be copied to guest machine first.
-            require => File['/var/www/app/'],
-            #if it received a "notify", it would execute the "command".
-            refreshonly => true;
-      }
-      #Ensure the /var/www directory is present.
-      file { '/var/www/':
-       ensure => 'directory',
-      }
-      include nginx, php, sudoers
+    #puppet-demo/puppet/manifests/init.pp
+    
+    #Run apt-get update;
+    exec { 'apt-get update':
+     path => '/usr/bin',
+    }
+    #Ensure the Vim package is installed and present; It is optional.
+    package { 'vim':
+     ensure => present,
+    }
+    
+    
+    file{ '/var/www/app/': 
+        ensure  => 'directory',
+        source  => "/vagrant/app/",
+        recurse => true,
+        #if the content of index.php has changed, notify exec['restart nginx']
+        notify  => Exec['restart nginx'],
+    }
+    
+    
+    exec {
+        'restart nginx':
+          command     => '/usr/sbin/service nginx restart',
+          #require the application file(s) to be copied to guest machine first.
+          require     => File['/var/www/app/'],
+          #if it received a "notify", it would execute the "command".
+          refreshonly => true;
+    }
+    #Ensure the /var/www directory is present.
+    file { '/var/www/':
+     ensure => 'directory',
+    }
+    include nginx, php, sudoers
 
     ```
     Most of the comments are self-explanatory. These segment of codes save the `/var/www/app/index.php` on VM as backup everytime before index.php is refreshed by being copied from the file on host machine(`/vagrant/app/index.php`). Also, record the content and trigger an execution if it has been changed. At this point, the execution is to restart Nginx.
