@@ -319,29 +319,18 @@
   
     We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
     ```
+    # ensure /var/www/app exists
     file{ '/var/www/app/':
       ensure => 'directory',
-      
     }
-    file{ '/var/www/app/previous.php':
-        #ensure previous.php is existing
-        ensure  => present,
-        #copied from last edited application file(s) as backup
-        #and listen on the content
-        source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
-    }
-    
     
     file{ '/var/www/app/index.php':
         ensure => present, 
         #copy from shared application file(s)
         source => "/vagrant/app/index.php",
-        #require previous.php to be copied first
-        require => File['/var/www/app/previous.php'],    
         #if the content of index.php has changed, notify exec['restart nginx']
         notify  => Exec['restart nginx'],
     }
-    
     
     exec {
         'restart nginx':
@@ -352,7 +341,14 @@
           refreshonly => true;
     }
     ```
-    It should look like this now:
+    Most of the comments are self-explanatory. These segment of codes save the `/var/www/app/index.php` on VM as backup everytime before index.php is refreshed by being copied from the file on host machine(`/vagrant/app/index.php`). Also, record the content and trigger an execution if it has been changed. At this point, the execution is to restart Nginx.
+    - `ensure => 'directory'` indicates this url is a directory. Create it if it does not exist. 
+    - `source => "/vagrant/app/index.php",` suggests this file should be copied from the path `source` points to and notice if the content has been changed. If source points to an array, such as: `source => ["/var/www/app/index.php", "/vagrant/Vagrantfile"]`, it will get from the first path that exists.
+    - `require => File['/var/www/app/previous.php'], ` asks the file it points to to be executed first.
+    - `notify  => Exec['restart nginx'],` triggers Exec['restart nginx'] when the content it gets from `source` changed.
+    - `refreshonly => true;` if refreshonly is true, execution will be triggered when it is notified. 
+    
+    It should look like this afterwards:
     ```
     #puppet-demo/puppet/manifests/init.pp
     
@@ -361,30 +357,17 @@
     }
     file{ '/var/www/app/':
       ensure => 'directory',
-      
     }
-    
-    file{ '/var/www/app/previous.php':
-        ensure  => present,
-        source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
-        #subscribe => Exec['restart nginx'],
-    }
-    
     
     file{ '/var/www/app/index.php':
         ensure => present, 
         source => "/vagrant/app/index.php",
-        require => File['/var/www/app/previous.php'],    
         notify  => Exec['restart nginx'],
-        #audit => 'content',
-        #content => file('/var/www/app/previous.php'),
     }
-    
     
     exec {
         'restart nginx':
           command     => '/usr/sbin/service nginx restart',
-          #subscribe => File["/var/www/app/index.php"],
           require => File['/var/www/app/index.php'],
           refreshonly => true;
     }
