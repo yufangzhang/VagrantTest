@@ -367,9 +367,16 @@
     - `refreshonly => true;` if refreshonly is true, execution will be triggered when it is notified. 
     
    
-    At this point, run `vagrant provision` will not restart Nginx if we donot change `app/index.php`. But if we make changes to index.php, the terminal should be expected to output some extra information like these:
+    At this point, run `vagrant provision` will not restart Nginx if we donot change `app/index.php`, and the output would look like these:
+    ```
+    ==> default: Notice: Compiled catalog for packer-virtualbox-iso-1422601639 in environment production in 0.34 seconds
+    ==> default: Notice: /Stage[main]/Main/Exec[apt-get update]/returns: executed successfully
+    ==> default: Notice: Finished catalog run in 6.72 seconds
+    ```
+    
+    But if we make changes to index.php, the terminal should be expected to output some extra information like these:
     ```
     ==> default: Notice: /Stage[main]/Main/File[/var/www/app/index.php]/content: content changed '{md5}332cad783163effa7e03f33486b7521d' to '{md5}647435a045b29514bef134a6be1307e8'
     ==> default: Notice: /Stage[main]/Main/Exec[restart nginx]: Triggered 'refresh' from 1 events
     ```
-    If it works well, we now have puppet and nginx installed and run well in the VM based on vagrant.
+    If everything works well, we now have puppet and nginx installed and run well in the VM based on vagrant:)
