@@ -160,7 +160,7 @@
      }
     }
     ```
-    Make sure Nginx is listenning on port 80
+    One thing here is to ensure Nginx is listenning on port 80
     * Configure PHP:
     ```
     # puppet-demo/puppet/modules/php/manifests/init.pp
@@ -181,15 +181,18 @@
     }
     ```
     
-    At this point, run `vagrant reload --provision`. Hopefully, everything should work out as expected.
+    At this point, run `vagrant provision`. Hopefully, everything should work out as expected.
   + Create a simple PHP script:
     Keep the application code within /puppet-demo/app/, and because we forwarded incoming Vagrant requests on port 5555 to port 80 on the guest machine, it means we can hit the app folder through a standard web server request. Therefore, we can create a simple PHP script inside `/puppet-demo/app/` called index.php:
+
     ```
     <?php
     print("Hello World");
     ?>
     ```
+    
   + Run a simple test to see if Nginx is listening on port 80
+  
     Add a line to Vagrantfile to use Vagrant's shell provisioner to ensure that nginx is listening on port 80:
     ```
     config.vm.provision :shell, path: "test_port.sh"
