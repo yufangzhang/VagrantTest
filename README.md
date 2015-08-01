@@ -270,6 +270,7 @@
     ```
     At this point, foo should be in admin group. Now if you run `su foo`, it would ask for a password to switch to root user.
   + Make sure Nginx will not restart unless changes made
+  
     We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
     ```
     file{ '/var/www/app/previous.php':
