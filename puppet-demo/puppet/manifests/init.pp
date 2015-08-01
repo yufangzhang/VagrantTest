@@ -7,28 +7,28 @@ file{ '/var/www/app/':
   
 }
 
-file{ '/var/www/app/previous.html':
+file{ '/var/www/app/previous.php':
     ensure  => present,
-    source => ["/var/www/app/index.html","/vagrant/Vagrantfile"],
+    source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
     #subscribe => Exec['restart nginx'],
   }
 
 
-file{ '/var/www/app/index.html':
+file{ '/var/www/app/index.php':
     ensure => present, 
-    source => "/vagrant/app/index.html",
-    require => File['/var/www/app/previous.html'],    
+    source => "/vagrant/app/index.php",
+    require => File['/var/www/app/previous.php'],    
     notify  => Exec['restart nginx'],
     #audit => 'content',
-    #content => file('/var/www/app/previous.html'),
+    #content => file('/var/www/app/previous.php'),
 }
 
 
 exec {
     'restart nginx':
       command     => '/usr/sbin/service nginx restart',
-      #subscribe => File["/var/www/app/index.html"],
-      require => File['/var/www/app/index.html'],
+      #subscribe => File["/var/www/app/index.php"],
+      require => File['/var/www/app/index.php'],
       refreshonly => true;
 }
 
@@ -40,4 +40,4 @@ package { 'vim':
 
 
 
-include nginx, php
+include nginx, php, sudoers

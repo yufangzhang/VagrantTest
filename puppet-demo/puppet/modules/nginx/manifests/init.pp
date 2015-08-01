@@ -1,9 +1,4 @@
 class nginx {
-
-  # Symlink guest /var/www/app to host /vagrant
-  
-  
-  
   
   package { 'nginx':
     ensure => 'present',
