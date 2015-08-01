@@ -274,7 +274,7 @@
     We compare the files in puppet-demo/app/. If changes made, we trigger Nginx to restart. Add the following to `puppet-demo/puppet/manifests/init.pp`:
     ```
     file{ '/var/www/app/previous.php':
-        #ensure previous.html is existing
+        #ensure previous.php is existing
         ensure  => present,
         #copied from last edited application file(s) as backup
         #and listen on the content
