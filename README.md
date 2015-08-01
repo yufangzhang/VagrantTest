@@ -24,7 +24,7 @@
      end
      ```
     
-     Also, forward all network activity on port 5000 to port 80 within our Vagrant guest machine.
+     Also, forward all network activity on port 5555 to port 80 within our Vagrant guest machine.
     * Save and run `$ vagrant up`. It should import the box and be completed sucessfully.
     
   + Use Puppet to automate environment configuration
