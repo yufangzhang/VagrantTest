@@ -4,17 +4,11 @@
   >
   .
   |-- app
-  
   |   `-- index.php
-  
   |-- puppet
-  
   |   |-- manifests
-  
   |   |   `-- init.pp
-  
   |   `-- modules
-  
   |       |-- nginx
   |       |   |-- files
   |       |   |   `-- 127.0.0.1
