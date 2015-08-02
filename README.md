@@ -246,6 +246,9 @@
     fi
     ```
     Run `$ vagrant provision`, it is expected to see `==> default: Nginx is listening on port 80` on the terminal output.
+    
+    Check `127.0.0.1:5555` in some browser and it is expected to see a "Hello world" page.
+    
   + Manage the contents of `/etc/sudoers` file
     * Add one more dependency on puppet/manifests by doing:
     ```
@@ -379,4 +382,4 @@
     ==> default: Notice: /Stage[main]/Main/File[/var/www/app/index.php]/content: content changed '{md5}332cad783163effa7e03f33486b7521d' to '{md5}647435a045b29514bef134a6be1307e8'
     ==> default: Notice: /Stage[main]/Main/Exec[restart nginx]: Triggered 'refresh' from 1 events
     ```
-    If everything works well, we now have puppet and nginx installed and run well in the VM based on vagrant:)
+    It should now show a "Hello world" page if you check `127.0.0.1:5555` in your favorite browser.
