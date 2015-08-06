@@ -1,43 +1,32 @@
-
+#Run apt-get update;
 exec { 'apt-get update':
-  path => '/usr/bin',
+ path => '/usr/bin',
 }
-file{ '/var/www/app/':
-  ensure => 'directory',
-  
+#Ensure the Vim package is installed and present; It is optional.
+package { 'vim':
+ ensure => present,
 }
 
-file{ '/var/www/app/previous.php':
-    ensure  => present,
-    source => ["/var/www/app/index.php","/vagrant/Vagrantfile"],
-    #subscribe => Exec['restart nginx'],
-  }
 
-
-file{ '/var/www/app/index.php':
-    ensure => present, 
-    source => "/vagrant/app/index.php",
-    require => File['/var/www/app/previous.php'],    
+file{ '/var/www/app/': 
+    ensure => 'directory',
+    source => "/vagrant/app/",
+    recurse => true,
+    #if the content of index.php has changed, notify exec['restart nginx']
     notify  => Exec['restart nginx'],
-    #audit => 'content',
-    #content => file('/var/www/app/previous.php'),
 }
 
 
 exec {
     'restart nginx':
       command     => '/usr/sbin/service nginx restart',
-      #subscribe => File["/var/www/app/index.php"],
-      require => File['/var/www/app/index.php'],
+      #require the application file(s) to be copied to guest machine first.
+      require => File['/var/www/app/'],
+      #if it received a "notify", it would execute the "command".
       refreshonly => true;
 }
-
-package { 'vim':
-  ensure => present,
+#Ensure the /var/www directory is present.
+file { '/var/www/':
+ ensure => 'directory',
 }
-
-
-
-
-
 include nginx, php, sudoers
